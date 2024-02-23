@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using FluentAssertions;
 using Tests.Models;
 
 namespace Tests.TestFixtures;
@@ -7,7 +8,7 @@ namespace Tests.TestFixtures;
 public class GetAllTodoTests
 {
     [Test]
-    public void GetAllTodo()
+    public void GetAllTodoSuccess()
     {
         var endpoint = "http://localhost:8080/api/TodoItems";
 
@@ -16,20 +17,10 @@ public class GetAllTodoTests
         request.Method = Method.Get;
 
         var response = client.Execute(request);
-        
-        // var responseBody = JsonConvert.DeserializeObject<List<TodoItemModel>>(response.Content);
-        // var todoList = new TodoListModel
-        // {
-        //     TodoItems = responseBody
-        // };
-        //
-        // var x = JsonConvert.SerializeObject(todoList);
-        // Console.WriteLine(x);
-
         var responseBody = JsonConvert.DeserializeObject<List<TodoItemModel>>(response.Content);
-
-        var x = JsonConvert.SerializeObject(responseBody);
-        Console.WriteLine(x);
-
+        
+        // Validate status code
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        responseBody.Should().NotBeNullOrEmpty();
     }
 }
