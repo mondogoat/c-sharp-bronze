@@ -6,15 +6,30 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
-public class GetAllTodoTests : TestFixtureBase
+public class GetAllTodoTests
 {
+    private readonly TestUtilities _testUtilities;
+
+    public GetAllTodoTests()
+    {
+        _testUtilities = new TestUtilities("http://localhost:8080/api");
+    }
+
     [Test]
     public void GetAllTodoSuccess()
     {
-        var endpoint = "http://localhost:8080/api/TodoItems";
-        var (responseBody, statusCode) = ExecuteGetRequest<List<TodoItemModel>>(endpoint);
+        // arrange
+        var endpoint = "TodoItems";
+        // var payload = new TodoItemModel()
+        // {
+        //     
+        // }
+        // _testUtilities.ExecutePostRequest<TodoItemModel>(payload);
         
-        // Validate
+        // act
+        var (responseBody, statusCode) = _testUtilities.ExecuteGetRequest<List<TodoItemModel>>(endpoint);
+        
+        // assert
         statusCode.Should().Be(HttpStatusCode.OK);
         responseBody.Should().NotBeNullOrEmpty();
     }

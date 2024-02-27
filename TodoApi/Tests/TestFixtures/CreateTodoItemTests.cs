@@ -6,13 +6,26 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
-public class CreateTodoItemTests: TestFixtureBase
+public class CreateTodoItemTests
 {
+    private readonly TestUtilities _testUtilities;
+
+    public CreateTodoItemTests()
+    {
+        _testUtilities = new TestUtilities("http://localhost:8080/api");
+    }
+
     [Test]
     public void CreateTodoItemSuccess()
     {
-        var endpoint = "http://localhost:8080/api/TodoItems";
-        var (responseBody, statusCode) = ExecutePostRequest<TodoItemModel>(endpoint);
+        var endpoint = "TodoItems";
+        var payload = new TodoItemModel
+        {
+            id = 999,
+            name = "test3",
+            isComplete = false
+        };
+        var (responseBody, statusCode) = _testUtilities.ExecutePostRequest<TodoItemModel>(endpoint, payload);
         
         // Validate status code
         statusCode.Should().Be(HttpStatusCode.Created);
