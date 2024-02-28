@@ -10,11 +10,11 @@ namespace Tests.TestFixtures;
 [TestFixture]
 public class GetAllTodoTests
 {
-    private readonly TestUtilities _testUtilities;
+    private readonly Helpers _helpers;
     private readonly string _endpoint = "TodoItems";
     public GetAllTodoTests()
     {
-        _testUtilities = new TestUtilities("http://localhost:8080/api");
+        _helpers = new Helpers("http://localhost:8080/api");
     }
     
     [SetUp]
@@ -28,20 +28,20 @@ public class GetAllTodoTests
                 isComplete = false
             };
             
-            _testUtilities.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+            _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
         }
     }
 
     [TearDown]
     public void ClearTodoList()
     {
-        var (todoItems, _) = _testUtilities.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
 
         if (todoItems != null && todoItems.Any())
         {
             foreach (var todoItem in todoItems)
             {
-                _testUtilities.ExecuteDeleteRequest(_endpoint, todoItem.id);
+                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.id);
             }
         }
     }
@@ -53,7 +53,7 @@ public class GetAllTodoTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _testUtilities.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
         Console.WriteLine(JsonConvert.SerializeObject(responseBody));
         
         // assert
@@ -78,7 +78,7 @@ public class GetAllTodoTests
         ClearTodoList();
         
         // act
-        var (responseBody, statusCode) = _testUtilities.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);

@@ -6,11 +6,11 @@ namespace Tests.TestFixtures;
 
 public class DeleteTodoItemTests
 {
-    private readonly TestUtilities _testUtilities;
+    private readonly Helpers _helpers;
     
     public DeleteTodoItemTests()
     {
-        _testUtilities = new TestUtilities("http://localhost:8080/api");
+        _helpers = new Helpers("http://localhost:8080/api");
     }
     
     [Test]
@@ -18,7 +18,7 @@ public class DeleteTodoItemTests
     {
         var id = 1;
         var endpoint = "http://localhost:8080/api/TodoItems";
-        var statusCode = _testUtilities.ExecuteDeleteRequest(endpoint, id);
+        var statusCode = _helpers.ExecuteDeleteRequest(endpoint, id);
         
         statusCode.Should().Be(HttpStatusCode.NoContent);
     }

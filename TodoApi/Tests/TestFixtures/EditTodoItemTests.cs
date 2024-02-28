@@ -6,11 +6,11 @@ namespace Tests.TestFixtures;
 
 public class EditTodoItemTests
 {
-    private readonly TestUtilities _testUtilities;
+    private readonly Helpers _helpers;
 
     public EditTodoItemTests()
     {
-        _testUtilities = new TestUtilities("http://localhost:8080/api");
+        _helpers = new Helpers("http://localhost:8080/api");
     }
     
     // TODO create setup where user creates one todo item first, then do a get one call using the same id to validate changes
@@ -26,7 +26,7 @@ public class EditTodoItemTests
         };
         var endpoint = "TodoItems/{id}";
         
-        var (responseBody, statusCode) = _testUtilities.ExecutePutRequest<TodoItemModel>(endpoint, id, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePutRequest<TodoItemModel>(endpoint, id, payload);
         
         statusCode.Should().Be(HttpStatusCode.NoContent);
     }

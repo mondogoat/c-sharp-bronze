@@ -6,11 +6,11 @@ namespace Tests.TestFixtures;
 
 public class GetOneTodoItemTests
 {
-    private readonly TestUtilities _testUtilities;
+    private readonly Helpers _helpers;
     
     public GetOneTodoItemTests()
     {
-        _testUtilities = new TestUtilities("http://localhost:8080/api");
+        _helpers = new Helpers("http://localhost:8080/api");
     }
     
     [Test]
@@ -18,7 +18,7 @@ public class GetOneTodoItemTests
     {
         var id = 1;
         var endpoint = $"TodoItems/{id}";
-        var (responseBody, statusCode) = _testUtilities.ExecuteGetOneRequest<TodoItemModel>(endpoint, id);
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemModel>(endpoint, id);
         
         statusCode.Should().Be(HttpStatusCode.OK);
         responseBody.Should().NotBeNull();

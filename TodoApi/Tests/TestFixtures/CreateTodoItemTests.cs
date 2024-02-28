@@ -8,15 +8,15 @@ namespace Tests.TestFixtures;
 
 public class CreateTodoItemTests
 {
-    private readonly TestUtilities _testUtilities;
+    private readonly Helpers _helpers;
 
     public CreateTodoItemTests()
     {
-        _testUtilities = new TestUtilities("http://localhost:8080/api");
+        _helpers = new Helpers("http://localhost:8080/api");
     }
 
     [Test]
-    public void CreateTodoItemSuccess()
+    public void CreateTodoItem_Success()
     {
         var endpoint = "TodoItems";
         var payload = new TodoItemModel
@@ -25,11 +25,31 @@ public class CreateTodoItemTests
             name = "test3",
             isComplete = false
         };
-        var (responseBody, statusCode) = _testUtilities.ExecutePostRequest<TodoItemModel>(endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(endpoint, payload);
         
         // Validate status code
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
         responseBody.id.Should().NotBe(null);
     }
+
+    [Test]
+    public void CreateTodoItem_MissingId()
+    {
+        
+    }
+
+    [Test]
+    public void CreateTodoItem_MissingName()
+    {
+        
+    }
+
+    [Test]
+    public void CreateTodoItem_MissingIsComplete()
+    {
+        
+    }
+    
+    
 }

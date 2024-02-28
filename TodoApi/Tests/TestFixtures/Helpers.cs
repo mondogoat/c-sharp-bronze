@@ -5,11 +5,11 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
-public class TestUtilities
+public class Helpers
 {
     private readonly string _baseUrl;
 
-    public TestUtilities(string baseUrl)
+    public Helpers(string baseUrl)
     {
         _baseUrl = baseUrl;
     }
