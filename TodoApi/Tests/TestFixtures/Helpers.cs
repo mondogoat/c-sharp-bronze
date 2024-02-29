@@ -42,7 +42,7 @@ public class Helpers
         return ExecuteRequest<T>(request);
     }
 
-    public (T, HttpStatusCode) ExecuteGetOneRequest<T>(string endpoint, int id)
+    public (T, HttpStatusCode) ExecuteGetOneRequest<T>(string endpoint, object id)
     {
         var request = new RestRequest($"{endpoint}/{id}", Method.Get);
         return ExecuteRequest<T>(request);
@@ -63,5 +63,12 @@ public class Helpers
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
         return response.StatusCode;
+    }
+    
+    public int GenerateId(object payload)
+    {
+        var (createTodoResponse, _) = ExecutePostRequest<TodoItemModel>("TodoItems", payload);
+        var createdId = createTodoResponse.id;
+        return createdId;
     }
 }
