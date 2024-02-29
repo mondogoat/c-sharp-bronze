@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Tests.Models;
 
 namespace Tests.TestFixtures;
@@ -7,6 +8,8 @@ namespace Tests.TestFixtures;
 public class EditTodoItemTests
 {
     private readonly Helpers _helpers;
+    private readonly string _endpoint = "TodoItems";
+    private int _createdId;
 
     public EditTodoItemTests()
     {
@@ -14,20 +17,37 @@ public class EditTodoItemTests
     }
     
     // TODO create setup where user creates one todo item first, then do a get one call using the same id to validate changes
+    [SetUp]
+    public void GenerateTodoItem()
+    {
+        var createRequestPayload = new TodoItemModel()
+        {
+            name = "test PUT endpoint",
+            isComplete = false
+        };
+        _createdId = _helpers.GenerateId(createRequestPayload);
+    }
+    
     [Test]
     public void EditTodoItemSuccess()
     {
-        var id = 1; // TODO call ExecutePostRequest first and get the id and pass it to the payload
+        // arrange
+        var expectedName = "restsharp edit";
         var payload = new TodoItemModel()
         {
-            id = 999,
-            name = "test3",
-            isComplete = false
+            id = _createdId,
+            name = "restsharp edit",
+            isComplete = true
         };
-        var endpoint = "TodoItems/{id}";
         
-        var (responseBody, statusCode) = _helpers.ExecutePutRequest<TodoItemModel>(endpoint, id, payload);
+        // act
+        var (responseBody, statusCode) = _helpers.ExecutePutRequest<TodoItemModel>(_endpoint, _createdId, payload);
+        var x = JsonConvert.SerializeObject(responseBody);
         
+        // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
+        
+        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, _createdId);
+        editedTodoItem.name.Should().Be(expectedName);
     }
 }
