@@ -48,7 +48,7 @@ public class Helpers
         return ExecuteRequest<T>(request);
     }
 
-    public (T, HttpStatusCode) ExecutePutRequest<T>(string endpoint, int id, object payload)
+    public (T, HttpStatusCode) ExecutePutRequest<T>(string endpoint, object id, object payload)
     {
         // TODO add setup in which a test will create a todo item first, then return that id and use it here
         var request = new RestRequest($"{endpoint}/{id}", Method.Put);
