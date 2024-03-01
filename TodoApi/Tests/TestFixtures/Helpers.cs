@@ -56,7 +56,7 @@ public class Helpers
         return ExecuteRequest<T>(request);
     }
 
-    public HttpStatusCode ExecuteDeleteRequest(string endpoint, int id)
+    public HttpStatusCode ExecuteDeleteRequest(string endpoint, object id)
     {
         // TODO add setup in which a test will create a todo item first, then return that id and use it here
         var request = new RestRequest($"{endpoint}/{id}", Method.Delete);
