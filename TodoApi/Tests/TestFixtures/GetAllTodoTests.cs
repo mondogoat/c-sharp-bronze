@@ -49,7 +49,6 @@ public class GetAllTodoTests
     [Test]
     public void GetAllTodo_Success()
     {
-        // TODO: Create 5 TodoItems first then execute GET request to fetch list of TODO
         // arrange
         
         // act
