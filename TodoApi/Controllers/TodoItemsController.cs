@@ -59,6 +59,12 @@ public class TodoItemsController : ControllerBase
 
         todoItem.Name = todoDTO.Name;
         todoItem.IsComplete = todoDTO.IsComplete;
+        
+        // Set CompletedTime if IsComplete is set to true
+        if(todoDTO.IsComplete)
+        {
+            todoItem.CompletedTime = DateTime.Now;
+        }
 
         try
         {
@@ -79,11 +85,19 @@ public class TodoItemsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoDTO)
     {
+        DateTime currentTime = DateTime.Now;
         var todoItem = new TodoItem
         {
             IsComplete = todoDTO.IsComplete,
-            Name = todoDTO.Name
+            Name = todoDTO.Name,
+            CreatedTime = currentTime // Set the CreatedTime upon creation
         };
+
+        // Set CompletedTime if IsComplete is true
+        if(todoDTO.IsComplete)
+        {
+            todoItem.CompletedTime = currentTime;
+        }
 
         _context.TodoItems.Add(todoItem);
         await _context.SaveChangesAsync();
@@ -93,6 +107,7 @@ public class TodoItemsController : ControllerBase
             new { id = todoItem.Id },
             ItemToDTO(todoItem));
     }
+    
     // </snippet_Create>
 
     // DELETE: api/TodoItems/5
@@ -121,6 +136,8 @@ public class TodoItemsController : ControllerBase
        {
            Id = todoItem.Id,
            Name = todoItem.Name,
-           IsComplete = todoItem.IsComplete
+           IsComplete = todoItem.IsComplete,
+           CreatedTime = todoItem.CreatedTime,
+           CompletedTime = todoItem.CompletedTime
        };
 }
