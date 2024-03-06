@@ -17,11 +17,12 @@ public class CreateTodoItemTests
     }
 
     [Test]
-    public void CreateTodoItem_Success()
+    public void CreateTodoItem_Success_IsCompleteFalse()
     {
         // arrange
         var payload = new TodoItemRequestModel
         {
+            Id = 1,
             Name = "test3",
             IsComplete = false
         };
@@ -32,6 +33,30 @@ public class CreateTodoItemTests
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
+        responseBody.CreatedTime.Should().NotBe(null);
+        responseBody.CompletedTime.Should().Be(null);
+        responseBody.Id.Should().NotBe(null);
+    }
+    
+    [Test]
+    public void CreateTodoItem_Success_IsCompleteTrue()
+    {
+        // arrange
+        var payload = new TodoItemRequestModel
+        {
+            Id = 1,
+            Name = "test4",
+            IsComplete = true
+        };
+        
+        // act
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        
+        // assert
+        statusCode.Should().Be(HttpStatusCode.Created);
+        responseBody.Should().NotBeNull();
+        responseBody.CreatedTime.Should().NotBe(null);
+        responseBody.CompletedTime.Should().NotBe(null);
         responseBody.Id.Should().NotBe(null);
     }
 
@@ -97,7 +122,7 @@ public class CreateTodoItemTests
             { "Id", 1 },
             { "Name", "Todo Item 1" },
             { "IsComplete", false },
-            { "DateCreated", DateTime.Now }
+            { "FieldNotIncluded", "Some string" }
             
         };
         string addedFieldPayload = JsonConvert.SerializeObject(payload);
@@ -112,6 +137,7 @@ public class CreateTodoItemTests
     [Test]
     public void CreateTodoItem_EmptyRequestBody()
     {
+        // Currently 201 but should be 400. Assigns null in name and false in isComplete
         // arrange
         var payload = new TodoItemRequestModel{ };
         

@@ -30,7 +30,7 @@ public class EditTodoItemTests
     }
     
     [Test]
-    public void EditTodoItem_Success()
+    public void EditTodoItem_SuccessSetIsCompleteFromFalseToTrue()
     {
         // arrange
         var expectedName = "restsharp edit";
@@ -49,6 +49,50 @@ public class EditTodoItemTests
         
         var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, _createdId);
         editedTodoItem.Name.Should().Be(expectedName);
+        editedTodoItem.CompletedTime.Should().NotBe(null);
+    }
+    
+    [Test]
+    public void EditTodoItem_SuccessSetIsCompleteFromTrueToFalse()
+    {
+        // arrange
+        var expectedName = "restsharp edit";
+        var payload1 = new TodoItemRequestModel()
+        {
+            Id = _createdId,
+            Name = "restsharp edit",
+            IsComplete = true
+        };
+        
+        // act
+        // Set isComplete of createdId from false to true
+        var (responseBody1, statusCode1) = _helpers.ExecutePutRequest<TodoItemResponseModel>(_endpoint, _createdId, payload1);
+        
+        // assert
+        statusCode1.Should().Be(HttpStatusCode.NoContent);
+        
+        var (editedTodoItem1, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, _createdId);
+        editedTodoItem1.Name.Should().Be(expectedName);
+        editedTodoItem1.CompletedTime.Should().NotBe(null);
+        
+        // Then set it back to false
+        // arrange
+        var payload2 = new TodoItemRequestModel()
+        {
+            Id = _createdId,
+            Name = "restsharp edit",
+            IsComplete = false
+        };
+        
+        // act
+        var (responseBody2, statusCode2) = _helpers.ExecutePutRequest<TodoItemResponseModel>(_endpoint, _createdId, payload2);
+        
+        // assert
+        statusCode2.Should().Be(HttpStatusCode.NoContent);
+        
+        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, _createdId);
+        editedTodoItem.Name.Should().Be(expectedName);
+        editedTodoItem.CompletedTime.Should().Be(null);
     }
 
     [Test]
@@ -76,12 +120,10 @@ public class EditTodoItemTests
     [Test]
     public void EditTodoItem_NonExistentId()
     {
-        // fails because the id in response body does not match with the id passed in the param.
-        // should have id not required and only follow what is passed in the query param.
         // arrange
         var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
+            Id = 999,
             Name = "restsharp edit",
             IsComplete = true
         };
@@ -117,7 +159,7 @@ public class EditTodoItemTests
     [Test]
     public void EditTodoItem_MissingIsComplete()
     {
-        // defaults to false after success. should be 400.
+        // defaults to false after success if isComplete is not passed in request body. should be 400.
         var payload = new TodoItemRequestModel()
         {
             Id = _createdId,
@@ -132,6 +174,7 @@ public class EditTodoItemTests
         
         var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, _createdId);
         editedTodoItem.IsComplete.Should().Be(false);
+        editedTodoItem.CompletedTime.Should().Be(null);
     }
     
     [Test]

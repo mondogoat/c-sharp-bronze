@@ -14,9 +14,6 @@ public class DeleteTodoItemTests
         _helpers = new Helpers("http://localhost:8080/api");
     }
     
-    // setup that creates a todoItem
-    // get one call: pass the createdId and assert that it does not exist anymore
-    
     [Test]
     public void DeleteTodoItem_Success()
     {
