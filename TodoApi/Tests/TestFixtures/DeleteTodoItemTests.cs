@@ -21,7 +21,7 @@ public class DeleteTodoItemTests
     public void DeleteTodoItem_Success()
     {
         // arrange
-        var payload = new TodoItemModel()
+        var payload = new TodoItemRequestModel()
         {
             Name = "test DELETE endpoint",
             IsComplete = false
@@ -34,7 +34,7 @@ public class DeleteTodoItemTests
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, createdId);
+        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, createdId);
         getTodoItemStatusCode.Should().Be(HttpStatusCode.NotFound);
         
     }

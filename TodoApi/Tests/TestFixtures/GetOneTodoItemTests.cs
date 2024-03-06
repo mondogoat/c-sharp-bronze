@@ -19,7 +19,7 @@ public class GetOneTodoItemTests
     public void GetOneTodoItem_Success()
     {
         // arrange
-        var payload = new TodoItemModel
+        var payload = new TodoItemRequestModel()
         {
             Name = "test get one",
             IsComplete = false
@@ -27,7 +27,7 @@ public class GetOneTodoItemTests
         var createdId = _helpers.GenerateId(payload);
 
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, createdId);
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, createdId);
 
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -40,7 +40,7 @@ public class GetOneTodoItemTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, 1234123);
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, 1234123);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);
@@ -52,7 +52,7 @@ public class GetOneTodoItemTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, "abc");
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, "abc");
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);

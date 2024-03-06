@@ -22,20 +22,20 @@ public class GetAllTodoTests
     {
         for (int i = 1; i <= 5; i++)
         {
-            var payload = new TodoItemModel
+            var payload = new TodoItemRequestModel()
             {
                 Name = $"todo item {i}",
                 IsComplete = false
             };
             
-            _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+            _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         }
     }
 
     [TearDown]
     public void ClearTodoList()
     {
-        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
 
         if (todoItems.Any())
         {
@@ -52,7 +52,7 @@ public class GetAllTodoTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
         Console.WriteLine(JsonConvert.SerializeObject(responseBody));
         
         // assert
@@ -67,7 +67,7 @@ public class GetAllTodoTests
         ClearTodoList();
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);

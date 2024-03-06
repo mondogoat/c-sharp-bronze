@@ -67,7 +67,7 @@ public class Helpers
     
     public int GenerateId(object payload)
     {
-        var (createTodoResponse, _) = ExecutePostRequest<TodoItemModel>("TodoItems", payload);
+        var (createTodoResponse, _) = ExecutePostRequest<TodoItemResponseModel>("TodoItems", payload);
         var createdId = createTodoResponse.Id;
         return createdId;
     }
