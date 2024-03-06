@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using Tests.Models;
 
-namespace Tests.TestFixtures;
+namespace Tests;
 
 public class Helpers
 {
@@ -68,7 +68,7 @@ public class Helpers
     public int GenerateId(object payload)
     {
         var (createTodoResponse, _) = ExecutePostRequest<TodoItemModel>("TodoItems", payload);
-        var createdId = createTodoResponse.id;
+        var createdId = createTodoResponse.Id;
         return createdId;
     }
 }

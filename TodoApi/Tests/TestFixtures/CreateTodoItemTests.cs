@@ -22,8 +22,8 @@ public class CreateTodoItemTests
         // arrange
         var payload = new TodoItemModel
         {
-            name = "test3",
-            isComplete = false
+            Name = "test3",
+            IsComplete = false
         };
         
         // act
@@ -32,7 +32,7 @@ public class CreateTodoItemTests
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
-        responseBody.id.Should().NotBe(null);
+        responseBody.Id.Should().NotBe(null);
     }
 
     [Test]
@@ -41,8 +41,8 @@ public class CreateTodoItemTests
         // arrange
         var payload = new TodoItemModel
         {
-            name = "test missing Id",
-            isComplete = false
+            Name = "test missing Id",
+            IsComplete = false
         };
         
         // act
@@ -51,7 +51,7 @@ public class CreateTodoItemTests
         // arrange
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
-        responseBody.id.Should().NotBe(null);
+        responseBody.Id.Should().NotBe(null);
     }
 
     [Test]
@@ -61,7 +61,7 @@ public class CreateTodoItemTests
         // arrange
         var payload = new TodoItemModel()
         {
-            isComplete = false
+            IsComplete = false
         };
         
         // act
@@ -78,7 +78,7 @@ public class CreateTodoItemTests
         // arrange
         var payload = new TodoItemModel()
         {
-            name = "test missing isComplete field"
+            Name = "test missing isComplete field"
         };
         
         // act
@@ -97,7 +97,7 @@ public class CreateTodoItemTests
             { "Id", 1 },
             { "Name", "Todo Item 1" },
             { "IsComplete", false },
-            { "dateCreated", DateTime.Now }
+            { "DateCreated", DateTime.Now }
             
         };
         string addedFieldPayload = JsonConvert.SerializeObject(payload);
@@ -147,7 +147,7 @@ public class CreateTodoItemTests
         // arrange
         var payload = new TodoItemModel()
         {
-            name =
+            Name =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in " +
                 "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa " +
@@ -158,7 +158,7 @@ public class CreateTodoItemTests
                 "aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi " +
                 "consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum " +
                 "qui dolorem eum fugiat quo voluptas nulla pariatur?",
-            isComplete = false
+            IsComplete = false
         }; // 1310 characters
         
         // act

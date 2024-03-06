@@ -24,8 +24,8 @@ public class GetAllTodoTests
         {
             var payload = new TodoItemModel
             {
-                name = $"todo item {i}",
-                isComplete = false
+                Name = $"todo item {i}",
+                IsComplete = false
             };
             
             _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
@@ -37,11 +37,11 @@ public class GetAllTodoTests
     {
         var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
 
-        if (todoItems != null && todoItems.Any())
+        if (todoItems.Any())
         {
             foreach (var todoItem in todoItems)
             {
-                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.id);
+                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.Id);
             }
         }
     }
@@ -59,17 +59,7 @@ public class GetAllTodoTests
         statusCode.Should().Be(HttpStatusCode.OK);
         responseBody.Should().NotBeNullOrEmpty();
     }
-
-    [Test]
-    public void GetAllTodo_IsCompleteValueFilterTrue()
-    {
-    }
     
-    [Test]
-    public void GetAllTodo_IsCompleteValueFilterFalse()
-    {
-    }
-
     [Test]
     public void GetAllTodo_SuccessWithEmptyListIfNoTodoItem()
     {
@@ -84,8 +74,18 @@ public class GetAllTodoTests
         responseBody.Should().BeEmpty();
     }
 
-    [Test]
-    public void GetAllTodo_Pagination()
-    {
-    }
+    // [Test]
+    // public void GetAllTodo_IsCompleteValueFilterTrue()
+    // {
+    // }
+    //
+    // [Test]
+    // public void GetAllTodo_IsCompleteValueFilterFalse()
+    // {
+    // }
+    //
+    // [Test]
+    // public void GetAllTodo_Pagination()
+    // {
+    // }
 }

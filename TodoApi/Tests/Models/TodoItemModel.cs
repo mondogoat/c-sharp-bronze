@@ -2,7 +2,9 @@
 
 public class TodoItemModel
 {
-    public int id { get; set; }
-    public string name { get; set; }
-    public bool isComplete { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool IsComplete { get; set; }
+    public DateTime CreatedTime { get; set; }
+    public DateTime? CompletedTime { get; set; }
 }
