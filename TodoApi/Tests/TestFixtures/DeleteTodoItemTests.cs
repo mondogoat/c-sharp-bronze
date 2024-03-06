@@ -23,8 +23,8 @@ public class DeleteTodoItemTests
         // arrange
         var payload = new TodoItemModel()
         {
-            name = "test DELETE endpoint",
-            isComplete = false
+            Name = "test DELETE endpoint",
+            IsComplete = false
         };
         var createdId = _helpers.GenerateId(payload);
         

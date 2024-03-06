@@ -24,8 +24,8 @@ public class GetAllTodoTests
         {
             var payload = new TodoItemModel
             {
-                name = $"todo item {i}",
-                isComplete = false
+                Name = $"todo item {i}",
+                IsComplete = false
             };
             
             _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
@@ -41,7 +41,7 @@ public class GetAllTodoTests
         {
             foreach (var todoItem in todoItems)
             {
-                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.id);
+                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.Id);
             }
         }
     }

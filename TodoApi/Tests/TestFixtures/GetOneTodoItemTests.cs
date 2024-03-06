@@ -21,8 +21,8 @@ public class GetOneTodoItemTests
         // arrange
         var payload = new TodoItemModel
         {
-            name = "test get one",
-            isComplete = false
+            Name = "test get one",
+            IsComplete = false
         };
         var createdId = _helpers.GenerateId(payload);
 
