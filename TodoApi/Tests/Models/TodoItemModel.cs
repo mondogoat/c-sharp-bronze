@@ -6,5 +6,5 @@ public class TodoItemModel
     public string Name { get; set; }
     public bool IsComplete { get; set; }
     public DateTime CreatedTime { get; set; }
-    public DateTime CompletedTime { get; set; }
+    public DateTime? CompletedTime { get; set; }
 }

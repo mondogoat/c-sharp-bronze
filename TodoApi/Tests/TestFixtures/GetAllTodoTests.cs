@@ -37,7 +37,7 @@ public class GetAllTodoTests
     {
         var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemModel>>(_endpoint);
 
-        if (todoItems != null && todoItems.Any())
+        if (todoItems.Any())
         {
             foreach (var todoItem in todoItems)
             {
@@ -59,17 +59,7 @@ public class GetAllTodoTests
         statusCode.Should().Be(HttpStatusCode.OK);
         responseBody.Should().NotBeNullOrEmpty();
     }
-
-    [Test]
-    public void GetAllTodo_IsCompleteValueFilterTrue()
-    {
-    }
     
-    [Test]
-    public void GetAllTodo_IsCompleteValueFilterFalse()
-    {
-    }
-
     [Test]
     public void GetAllTodo_SuccessWithEmptyListIfNoTodoItem()
     {
@@ -84,8 +74,18 @@ public class GetAllTodoTests
         responseBody.Should().BeEmpty();
     }
 
-    [Test]
-    public void GetAllTodo_Pagination()
-    {
-    }
+    // [Test]
+    // public void GetAllTodo_IsCompleteValueFilterTrue()
+    // {
+    // }
+    //
+    // [Test]
+    // public void GetAllTodo_IsCompleteValueFilterFalse()
+    // {
+    // }
+    //
+    // [Test]
+    // public void GetAllTodo_Pagination()
+    // {
+    // }
 }
