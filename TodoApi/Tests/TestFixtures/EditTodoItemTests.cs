@@ -153,7 +153,6 @@ public class EditTodoItemTests
         
         var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, _createdId);
         editedTodoItem.Name.Should().Be("test PUT endpoint");
-        Console.WriteLine(JsonConvert.SerializeObject(editedTodoItem));
     }
     
     [Test]

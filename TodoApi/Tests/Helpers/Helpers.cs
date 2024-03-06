@@ -36,7 +36,6 @@ public class Helpers
 
     public (T, HttpStatusCode) ExecutePostRequest<T>(string endpoint, object payload)
     {
-        // TODO add id as a value returned by the method
         var request = new RestRequest(endpoint, Method.Post);
         request.AddJsonBody(payload);
         return ExecuteRequest<T>(request);
@@ -50,7 +49,6 @@ public class Helpers
 
     public (T, HttpStatusCode) ExecutePutRequest<T>(string endpoint, object id, object payload)
     {
-        // TODO add setup in which a test will create a todo item first, then return that id and use it here
         var request = new RestRequest($"{endpoint}/{id}", Method.Put);
         request.AddJsonBody(payload);
         return ExecuteRequest<T>(request);
@@ -58,7 +56,6 @@ public class Helpers
 
     public HttpStatusCode ExecuteDeleteRequest(string endpoint, object id)
     {
-        // TODO add setup in which a test will create a todo item first, then return that id and use it here
         var request = new RestRequest($"{endpoint}/{id}", Method.Delete);
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
