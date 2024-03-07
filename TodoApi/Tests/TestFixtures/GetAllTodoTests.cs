@@ -7,7 +7,7 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
-[TestFixture]
+[TestFixture, Order(5)]
 public class GetAllTodoTests
 {
     private readonly Helpers _helpers;

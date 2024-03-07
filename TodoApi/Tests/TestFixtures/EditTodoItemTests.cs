@@ -5,6 +5,7 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
+[TestFixture, Order(3)]
 public class EditTodoItemTests
 {
     private readonly Helpers _helpers;

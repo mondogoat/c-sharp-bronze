@@ -4,6 +4,7 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
+[TestFixture, Order(4)]
 public class DeleteTodoItemTests
 {
     private readonly Helpers _helpers;
