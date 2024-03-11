@@ -4,6 +4,7 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
+[TestFixture, Order(4)]
 public class DeleteTodoItemTests
 {
     private readonly Helpers _helpers;
@@ -14,14 +15,11 @@ public class DeleteTodoItemTests
         _helpers = new Helpers("http://localhost:8080/api");
     }
     
-    // setup that creates a todoItem
-    // get one call: pass the createdId and assert that it does not exist anymore
-    
     [Test]
     public void DeleteTodoItem_Success()
     {
         // arrange
-        var payload = new TodoItemModel()
+        var payload = new TodoItemRequestModel()
         {
             Name = "test DELETE endpoint",
             IsComplete = false
@@ -34,7 +32,7 @@ public class DeleteTodoItemTests
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemModel>(_endpoint, createdId);
+        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, createdId);
         getTodoItemStatusCode.Should().Be(HttpStatusCode.NotFound);
         
     }

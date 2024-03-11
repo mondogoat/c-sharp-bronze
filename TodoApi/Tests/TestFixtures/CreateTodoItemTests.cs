@@ -6,6 +6,7 @@ using Tests.Models;
 
 namespace Tests.TestFixtures;
 
+[TestFixture, Order(1)]
 public class CreateTodoItemTests
 {
     private readonly Helpers _helpers;
@@ -17,21 +18,46 @@ public class CreateTodoItemTests
     }
 
     [Test]
-    public void CreateTodoItem_Success()
+    public void CreateTodoItem_Success_IsCompleteFalse()
     {
         // arrange
-        var payload = new TodoItemModel
+        var payload = new TodoItemRequestModel
         {
+            Id = 1,
             Name = "test3",
             IsComplete = false
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
+        responseBody.CreatedTime.Should().NotBe(null);
+        responseBody.CompletedTime.Should().Be(null);
+        responseBody.Id.Should().NotBe(null);
+    }
+    
+    [Test]
+    public void CreateTodoItem_Success_IsCompleteTrue()
+    {
+        // arrange
+        var payload = new TodoItemRequestModel
+        {
+            Id = 1,
+            Name = "test4",
+            IsComplete = true
+        };
+        
+        // act
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        
+        // assert
+        statusCode.Should().Be(HttpStatusCode.Created);
+        responseBody.Should().NotBeNull();
+        responseBody.CreatedTime.Should().NotBe(null);
+        responseBody.CompletedTime.Should().NotBe(null);
         responseBody.Id.Should().NotBe(null);
     }
 
@@ -39,14 +65,14 @@ public class CreateTodoItemTests
     public void CreateTodoItem_MissingId()
     {
         // arrange
-        var payload = new TodoItemModel
+        var payload = new TodoItemRequestModel
         {
             Name = "test missing Id",
             IsComplete = false
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // arrange
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -59,13 +85,13 @@ public class CreateTodoItemTests
     {
         // name would be null but 201. should be 400.
         // arrange
-        var payload = new TodoItemModel()
+        var payload = new TodoItemRequestModel()
         {
             IsComplete = false
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -76,13 +102,13 @@ public class CreateTodoItemTests
     {
         // should be 400 error. currently 201 and defaults to false
         // arrange
-        var payload = new TodoItemModel()
+        var payload = new TodoItemRequestModel()
         {
             Name = "test missing isComplete field"
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -97,13 +123,13 @@ public class CreateTodoItemTests
             { "Id", 1 },
             { "Name", "Todo Item 1" },
             { "IsComplete", false },
-            { "DateCreated", DateTime.Now }
+            { "FieldNotIncluded", "Some string" }
             
         };
         string addedFieldPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, addedFieldPayload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, addedFieldPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -112,11 +138,12 @@ public class CreateTodoItemTests
     [Test]
     public void CreateTodoItem_EmptyRequestBody()
     {
+        // Currently 201 but should be 400. Assigns null in name and false in isComplete
         // arrange
-        var payload = new TodoItemModel{ };
+        var payload = new TodoItemRequestModel{ };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -134,7 +161,7 @@ public class CreateTodoItemTests
         string modifiedPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, modifiedPayload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, modifiedPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -145,7 +172,7 @@ public class CreateTodoItemTests
     {
         // no limit currently. should be limited to something like 256 char.
         // arrange
-        var payload = new TodoItemModel()
+        var payload = new TodoItemRequestModel()
         {
             Name =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
@@ -162,7 +189,7 @@ public class CreateTodoItemTests
         }; // 1310 characters
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
