@@ -1,22 +1,12 @@
 ﻿using System.Net;
-using Newtonsoft.Json;
-using RestSharp;
 using FluentAssertions;
-using NUnit.Framework.Internal;
 using Tests.Models;
 
 namespace Tests.TestFixtures;
 
 [TestFixture, Order(5)]
-public class GetAllTodoTests
+public class GetAllTodoTests: BaseTestFixture
 {
-    private readonly Helpers _helpers;
-    private readonly string _endpoint = "TodoItems";
-    public GetAllTodoTests()
-    {
-        _helpers = new Helpers("http://localhost:8080/api");
-    }
-    
     [SetUp]
     public void PopulateTodoList()
     {
@@ -28,22 +18,24 @@ public class GetAllTodoTests
                 IsComplete = false
             };
             
-            _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+            _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         }
+
     }
 
     [TearDown]
     public void ClearTodoList()
     {
-        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
+        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
 
         if (todoItems.Any())
         {
             foreach (var todoItem in todoItems)
             {
-                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.Id);
+                _helpers.ExecuteDeleteRequest(Endpoint, todoItem.Id);
             }
         }
+        
     }
     
     [Test]
@@ -52,8 +44,7 @@ public class GetAllTodoTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
-        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -67,7 +58,7 @@ public class GetAllTodoTests
         ClearTodoList();
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);

@@ -1,22 +1,13 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
-using RestSharp;
 using FluentAssertions;
 using Tests.Models;
 
 namespace Tests.TestFixtures;
 
 [TestFixture, Order(1)]
-public class CreateTodoItemTests
+public class CreateTodoItemTests: BaseTestFixture
 {
-    private readonly Helpers _helpers;
-    private readonly string _endpoint = "TodoItems";
-
-    public CreateTodoItemTests()
-    {
-        _helpers = new Helpers("http://localhost:8080/api");
-    }
-
     [Test]
     public void CreateTodoItem_Success_IsCompleteFalse()
     {
@@ -29,7 +20,7 @@ public class CreateTodoItemTests
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -51,7 +42,7 @@ public class CreateTodoItemTests
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -72,7 +63,7 @@ public class CreateTodoItemTests
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // arrange
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -91,7 +82,7 @@ public class CreateTodoItemTests
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -108,7 +99,7 @@ public class CreateTodoItemTests
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -129,7 +120,7 @@ public class CreateTodoItemTests
         string addedFieldPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, addedFieldPayload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, addedFieldPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -140,10 +131,10 @@ public class CreateTodoItemTests
     {
         // Currently 201 but should be 400. Assigns null in name and false in isComplete
         // arrange
-        var payload = new TodoItemRequestModel{ };
+        var payload = new TodoItemRequestModel{};
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -161,7 +152,7 @@ public class CreateTodoItemTests
         string modifiedPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, modifiedPayload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, modifiedPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -189,7 +180,7 @@ public class CreateTodoItemTests
         }; // 1310 characters
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
+        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
