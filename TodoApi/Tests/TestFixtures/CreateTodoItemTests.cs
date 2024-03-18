@@ -28,6 +28,7 @@ public class CreateTodoItemTests: BaseTestFixture
         responseBody.CreatedTime.Should().NotBe(null);
         responseBody.CompletedTime.Should().Be(null);
         responseBody.Id.Should().NotBe(null);
+        responseBody.Name.Should().Be(payload.Name);
     }
     
     [Test]
@@ -50,6 +51,7 @@ public class CreateTodoItemTests: BaseTestFixture
         responseBody.CreatedTime.Should().NotBe(null);
         responseBody.CompletedTime.Should().NotBe(null);
         responseBody.Id.Should().NotBe(null);
+        responseBody.Name.Should().Be(payload.Name);
     }
 
     [Test]
@@ -69,7 +71,10 @@ public class CreateTodoItemTests: BaseTestFixture
         statusCode.Should().Be(HttpStatusCode.Created);
         responseBody.Should().NotBeNull();
         responseBody.Id.Should().NotBe(null);
-    }
+        responseBody.CreatedTime.Should().NotBe(null);
+        responseBody.CompletedTime.Should().Be(null);
+        responseBody.Name.Should().Be(payload.Name);
+    }   
 
     [Test]
     public void CreateTodoItem_MissingName()

@@ -4,7 +4,7 @@ namespace Tests.TestFixtures;
 
 public class BaseTestFixture
 {
-    protected Helpers _helpers;
+    protected Helpers.Helpers _helpers;
     protected readonly string Endpoint = "TodoItems";
     private RestClient? _client;
 
@@ -13,7 +13,7 @@ public class BaseTestFixture
     {
         Console.WriteLine("setup. session started");
         _client = new RestClient("http://localhost:8080/api");
-        _helpers = new Helpers(_client.Options.BaseUrl.ToString());
+        _helpers = new Helpers.Helpers(_client.Options.BaseUrl.ToString());
     }
     
     [OneTimeTearDown]

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using Tests.Models;
 
-namespace Tests;
+namespace Tests.Helpers;
 
 public class Helpers
 {
@@ -31,16 +31,14 @@ public class Helpers
         }
         catch (Exception ex)
         {
-            // Handle deserialization exception (optional)
+            // Handle deserialization exception
             throw new Exception($"Error deserializing response: {ex.Message}");
         }
-
         if (responseBody == null)
         {
-            // Handle the case where deserialization fails (e.g., throw exception, log error)
+            // Handle the case where deserialization fails
             throw new Exception("Deserialization failed. Response body is null.");
         }
-        
         return (responseBody, response.StatusCode);
     }
 
