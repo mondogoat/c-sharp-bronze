@@ -17,10 +17,29 @@ namespace TodoApi.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemResponseDto>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoItemResponseDto>>> GetTodoItems(bool? isComplete)
         {
             var todoItems = await _context.TodoItems.ToListAsync();
-            return Ok(todoItems.Select(ItemToResponseDto));
+
+            List<TodoItem> filteredItems = new List<TodoItem>();
+            if (isComplete.HasValue)
+            {
+                foreach (var item in todoItems)
+                {
+                    if (item.IsComplete == isComplete.Value)
+                    {
+                        filteredItems.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                // Include all items if no filter is provided
+                filteredItems.AddRange(todoItems);
+            }
+
+            var response = filteredItems.Select(ItemToResponseDto);
+            return Ok(response);
         }
 
         // GET: api/TodoItems/5
