@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using Tests.Models;
 
-namespace Tests;
+namespace Tests.Helpers;
 
 public class Helpers
 {
@@ -14,17 +14,31 @@ public class Helpers
         _baseUrl = baseUrl;
     }
 
-    public (T, HttpStatusCode) ExecuteRequest<T>(RestRequest request)
+    private (T, HttpStatusCode) ExecuteRequest<T>(RestRequest request)
     {
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
 
-        // if (response.ErrorException != null || response.StatusCode != System.Net.HttpStatusCode.OK)
+        // if (response.ErrorException != null)
         // {
         //     throw new Exception($"Request failed with status code: {response.StatusCode}");
         // }
 
-        var responseBody = JsonConvert.DeserializeObject<T>(response.Content);
+        T responseBody;
+        try
+        {
+            responseBody =  JsonConvert.DeserializeObject<T>(response.Content);
+        }
+        catch (Exception ex)
+        {
+            // Handle deserialization exception
+            throw new Exception($"Error deserializing response: {ex.Message}");
+        }
+        // if (responseBody == null)
+        // {
+        //     // Handle the case where deserialization fails
+        //     throw new Exception("Deserialization failed. Response body is null.");
+        // }
         return (responseBody, response.StatusCode);
     }
 

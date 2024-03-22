@@ -1,48 +1,27 @@
 ﻿using System.Net;
-using Newtonsoft.Json;
-using RestSharp;
 using FluentAssertions;
-using NUnit.Framework.Internal;
+using Newtonsoft.Json;
 using Tests.Models;
 
 namespace Tests.TestFixtures;
 
 [TestFixture, Order(5)]
-public class GetAllTodoTests
+public class GetAllTodoTests: BaseTestFixture
 {
-    private readonly Helpers _helpers;
-    private readonly string _endpoint = "TodoItems";
-    public GetAllTodoTests()
-    {
-        _helpers = new Helpers("http://localhost:8080/api");
-    }
-    
     [SetUp]
     public void PopulateTodoList()
     {
         for (int i = 1; i <= 5; i++)
         {
+            // alternate isComplete value, false first
+            bool isComplete = i % 2 == 0; 
             var payload = new TodoItemRequestModel()
             {
                 Name = $"todo item {i}",
-                IsComplete = false
+                IsComplete = isComplete
             };
             
-            _helpers.ExecutePostRequest<TodoItemResponseModel>(_endpoint, payload);
-        }
-    }
-
-    [TearDown]
-    public void ClearTodoList()
-    {
-        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
-
-        if (todoItems.Any())
-        {
-            foreach (var todoItem in todoItems)
-            {
-                _helpers.ExecuteDeleteRequest(_endpoint, todoItem.Id);
-            }
+            _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         }
     }
     
@@ -52,8 +31,7 @@ public class GetAllTodoTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
-        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -67,25 +45,53 @@ public class GetAllTodoTests
         ClearTodoList();
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(_endpoint);
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
         responseBody.Should().BeEmpty();
     }
+    
+    [Test]
+    public void GetAllTodo_IsCompleteValueFilterFalse()
+    {
+        // arrange
+        
+        // act
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=false");
+        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
+       
+        // assert
+        statusCode.Should().Be(HttpStatusCode.OK);
+        foreach (var item in responseBody)
+        {
+            item.IsComplete.Should().Be(false);
+            item.CompletedTime.Should().Be(null);
+        }
+    }
 
-    // [Test]
-    // public void GetAllTodo_IsCompleteValueFilterTrue()
-    // {
-    // }
-    //
-    // [Test]
-    // public void GetAllTodo_IsCompleteValueFilterFalse()
-    // {
-    // }
-    //
-    // [Test]
-    // public void GetAllTodo_Pagination()
-    // {
-    // }
+    [Test]
+    public void GetAllTodo_IsCompleteValueFilterTrue()
+    {
+        // arrange
+        
+        // act
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=true");
+        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
+        
+        // assert
+        statusCode.Should().Be(HttpStatusCode.OK);
+        
+        foreach (var item in responseBody)
+        {
+            item.IsComplete.Should().Be(true);
+            item.CompletedTime.Should().NotBe(null);
+        }
+    }
+    
+    [Test]
+    [Ignore("Pagination not yet implemented")]
+    public void GetAllTodo_Pagination()
+    {
+    }
 }

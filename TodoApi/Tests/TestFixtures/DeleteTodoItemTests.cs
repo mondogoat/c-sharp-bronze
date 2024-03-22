@@ -5,15 +5,8 @@ using Tests.Models;
 namespace Tests.TestFixtures;
 
 [TestFixture, Order(4)]
-public class DeleteTodoItemTests
+public class DeleteTodoItemTests : BaseTestFixture
 {
-    private readonly Helpers _helpers;
-    private readonly string _endpoint = "TodoItems";
-    
-    public DeleteTodoItemTests()
-    {
-        _helpers = new Helpers("http://localhost:8080/api");
-    }
     
     [Test]
     public void DeleteTodoItem_Success()
@@ -27,12 +20,12 @@ public class DeleteTodoItemTests
         var createdId = _helpers.GenerateId(payload);
         
         // act
-        var statusCode = _helpers.ExecuteDeleteRequest(_endpoint, createdId);
+        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, createdId);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, createdId);
+        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
         getTodoItemStatusCode.Should().Be(HttpStatusCode.NotFound);
         
     }
@@ -42,7 +35,7 @@ public class DeleteTodoItemTests
     {
         // arrange
         
-        var statusCode = _helpers.ExecuteDeleteRequest(_endpoint, "abc123");
+        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, "abc123");
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -51,7 +44,7 @@ public class DeleteTodoItemTests
     [Test]
     public void DeleteTodoItem_NonExistentId()
     {
-        var statusCode = _helpers.ExecuteDeleteRequest(_endpoint, 998);
+        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, 998);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);

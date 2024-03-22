@@ -7,15 +7,8 @@ using Tests.Models;
 namespace Tests.TestFixtures;
 
 [TestFixture, Order(2)]
-public class GetOneTodoItemTests
+public class GetOneTodoItemTests: BaseTestFixture
 {
-    private readonly Helpers _helpers;
-    private readonly string _endpoint = "TodoItems";
-    public GetOneTodoItemTests()
-    {
-        _helpers = new Helpers("http://localhost:8080/api");
-    }
-
     [Test]
     public void GetOneTodoItem_Success()
     {
@@ -28,7 +21,7 @@ public class GetOneTodoItemTests
         var createdId = _helpers.GenerateId(payload);
 
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, createdId);
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
 
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -41,7 +34,7 @@ public class GetOneTodoItemTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, 1234123);
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, 1234123);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);
@@ -53,7 +46,7 @@ public class GetOneTodoItemTests
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(_endpoint, "abc");
+        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, "abc");
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
