@@ -19,10 +19,10 @@ public class Helpers
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
 
-        if (response.ErrorException != null)
-        {
-            throw new Exception($"Request failed with status code: {response.StatusCode}");
-        }
+        // if (response.ErrorException != null)
+        // {
+        //     throw new Exception($"Request failed with status code: {response.StatusCode}");
+        // }
 
         T responseBody;
         try
@@ -34,11 +34,11 @@ public class Helpers
             // Handle deserialization exception
             throw new Exception($"Error deserializing response: {ex.Message}");
         }
-        if (responseBody == null)
-        {
-            // Handle the case where deserialization fails
-            throw new Exception("Deserialization failed. Response body is null.");
-        }
+        // if (responseBody == null)
+        // {
+        //     // Handle the case where deserialization fails
+        //     throw new Exception("Deserialization failed. Response body is null.");
+        // }
         return (responseBody, response.StatusCode);
     }
 

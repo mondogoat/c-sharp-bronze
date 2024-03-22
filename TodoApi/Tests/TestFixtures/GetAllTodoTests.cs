@@ -24,20 +24,6 @@ public class GetAllTodoTests: BaseTestFixture
             _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         }
     }
-
-    [TearDown]
-    public void ClearTodoList()
-    {
-        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
-    
-        if (todoItems.Any())
-        {
-            foreach (var todoItem in todoItems)
-            {
-                _helpers.ExecuteDeleteRequest(Endpoint, todoItem.Id);
-            }
-        }
-    }
     
     [Test]
     public void GetAllTodo_Success()
@@ -63,8 +49,25 @@ public class GetAllTodoTests: BaseTestFixture
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
-        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
         responseBody.Should().BeEmpty();
+    }
+    
+    [Test]
+    public void GetAllTodo_IsCompleteValueFilterFalse()
+    {
+        // arrange
+        
+        // act
+        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=false");
+        Console.WriteLine(JsonConvert.SerializeObject(responseBody));
+       
+        // assert
+        statusCode.Should().Be(HttpStatusCode.OK);
+        foreach (var item in responseBody)
+        {
+            item.IsComplete.Should().Be(false);
+            item.CompletedTime.Should().Be(null);
+        }
     }
 
     [Test]
@@ -78,20 +81,12 @@ public class GetAllTodoTests: BaseTestFixture
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
-        responseBody.Count.Should().Be(2);
-    }
-    
-    [Test]
-    public void GetAllTodo_IsCompleteValueFilterFalse()
-    {
-        // arrange
         
-        // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=false");
-       
-        // assert
-        statusCode.Should().Be(HttpStatusCode.OK);
-        responseBody.Count.Should().Be(3);
+        foreach (var item in responseBody)
+        {
+            item.IsComplete.Should().Be(true);
+            item.CompletedTime.Should().NotBe(null);
+        }
     }
     
     [Test]

@@ -18,7 +18,6 @@ public class EditTodoItemTests : BaseTestFixture
             IsComplete = false
         };
         _createdId = _helpers.GenerateId(createRequestPayload);
-        Console.WriteLine(_createdId);
     }
     
     [Test]

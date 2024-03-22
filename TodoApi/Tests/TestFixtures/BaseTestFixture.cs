@@ -1,5 +1,5 @@
 ﻿using RestSharp;
-
+using Tests.Models;
 
 namespace Tests.TestFixtures;
 
@@ -25,5 +25,19 @@ public class BaseTestFixture
     public void Dispose()
     {
         _client?.Dispose();
+    }
+    
+    [TearDown]
+    public void ClearTodoList()
+    {
+        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
+    
+        if (todoItems.Any())
+        {
+            foreach (var todoItem in todoItems)
+            {
+                _helpers.ExecuteDeleteRequest(Endpoint, todoItem.Id);
+            }
+        }
     }
 }
