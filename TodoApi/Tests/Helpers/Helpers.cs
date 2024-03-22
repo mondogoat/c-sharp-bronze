@@ -19,7 +19,7 @@ public class Helpers
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
 
-        if (response.ErrorException != null || response.StatusCode != System.Net.HttpStatusCode.OK)
+        if (response.ErrorException != null)
         {
             throw new Exception($"Request failed with status code: {response.StatusCode}");
         }
@@ -27,7 +27,7 @@ public class Helpers
         T responseBody;
         try
         {
-            responseBody = JsonConvert.DeserializeObject<T>(response.Content);
+            responseBody =  JsonConvert.DeserializeObject<T>(response.Content);
         }
         catch (Exception ex)
         {
