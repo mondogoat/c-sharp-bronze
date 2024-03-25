@@ -20,7 +20,7 @@ public class CreateTodoItemTests: BaseTestFixture
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (responseBody, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -43,7 +43,7 @@ public class CreateTodoItemTests: BaseTestFixture
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (responseBody, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -65,7 +65,7 @@ public class CreateTodoItemTests: BaseTestFixture
         };
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (responseBody, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // arrange
         statusCode.Should().Be(HttpStatusCode.Created);
@@ -79,7 +79,8 @@ public class CreateTodoItemTests: BaseTestFixture
     [Test]
     public void CreateTodoItem_MissingName()
     {
-        // name would be null but 201. should be 400.
+        // Name would be null but giving 201. Should be 400.
+        // Field validation needs to be implemented.
         // arrange
         var payload = new TodoItemRequestModel()
         {
@@ -87,7 +88,7 @@ public class CreateTodoItemTests: BaseTestFixture
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -96,7 +97,8 @@ public class CreateTodoItemTests: BaseTestFixture
     [Test]
     public void CreateTodoItem_MissingIsComplete()
     {
-        // should be 400 error. currently 201 and defaults to false
+        // isComplete would be defaulted to null, returning 201. Should be 400.
+        // Field validation needs to be implemented.
         // arrange
         var payload = new TodoItemRequestModel()
         {
@@ -104,7 +106,7 @@ public class CreateTodoItemTests: BaseTestFixture
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -113,6 +115,8 @@ public class CreateTodoItemTests: BaseTestFixture
     [Test]
     public void CreateTodoItem_AddExtraFieldInPayload()
     {
+        // Returning 201 but should be 400.
+        // Field validation needs to be implemented. 
         // arrange
         var payload = new Dictionary<string, object>
         {
@@ -125,7 +129,7 @@ public class CreateTodoItemTests: BaseTestFixture
         string addedFieldPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, addedFieldPayload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, addedFieldPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -134,12 +138,13 @@ public class CreateTodoItemTests: BaseTestFixture
     [Test]
     public void CreateTodoItem_EmptyRequestBody()
     {
-        // Currently 201 but should be 400. Assigns null in name and false in isComplete
+        // Currently 201 but should be 400. Assigns null in name and false in isComplete.
+        // Field validation needs to be implemented.
         // arrange
         var payload = new TodoItemRequestModel{};
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -157,7 +162,7 @@ public class CreateTodoItemTests: BaseTestFixture
         string modifiedPayload = JsonConvert.SerializeObject(payload);
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, modifiedPayload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, modifiedPayload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -166,7 +171,8 @@ public class CreateTodoItemTests: BaseTestFixture
     [Test]
     public void CreateTodoItem_NameFieldLimit()
     {
-        // no limit currently. should be limited to something like 256 char.
+        // No limit currently. Should be limited to something like 256 char.
+        // Field validation needs to be implemented.
         // arrange
         var payload = new TodoItemRequestModel()
         {
@@ -185,11 +191,16 @@ public class CreateTodoItemTests: BaseTestFixture
         }; // 1310 characters
         
         // act
-        var (_, statusCode) = _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+        var (_, statusCode) = Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
+    [Test]
+    [Ignore("Todo App is still a local implementation and not hosted to a Server")]
+    public void CreateTodoItem_ServerErrors()
+    {
     }
         
     

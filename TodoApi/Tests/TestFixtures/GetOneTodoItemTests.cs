@@ -18,10 +18,10 @@ public class GetOneTodoItemTests: BaseTestFixture
             Name = "test get one",
             IsComplete = false
         };
-        var createdId = _helpers.GenerateId(payload);
+        var createdId = Helpers.GenerateId(payload);
 
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
+        var (responseBody, statusCode) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
 
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -34,7 +34,7 @@ public class GetOneTodoItemTests: BaseTestFixture
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, 1234123);
+        var (responseBody, statusCode) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, 1234123);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);
@@ -46,7 +46,7 @@ public class GetOneTodoItemTests: BaseTestFixture
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, "abc");
+        var (responseBody, statusCode) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, "abc");
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);

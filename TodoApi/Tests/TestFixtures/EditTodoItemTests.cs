@@ -7,17 +7,27 @@ namespace Tests.TestFixtures;
 [TestFixture, Order(3)]
 public class EditTodoItemTests : BaseTestFixture
 {
-    private int _createdId;
+    private int _createdIdFalse;
+    private int _createdIdTrue;
     
     [SetUp]
-    public void GenerateTodoItem()
+    public void GenerateTodoItems()
     {
-        var createRequestPayload = new TodoItemRequestModel()
+        // First TodoItem with IsComplete=false
+        var createRequestPayload1 = new TodoItemRequestModel()
         {
-            Name = "test PUT endpoint",
+            Name = "test PUT endpoint - isComplete=false",
             IsComplete = false
         };
-        _createdId = _helpers.GenerateId(createRequestPayload);
+        _createdIdFalse = Helpers.GenerateId(createRequestPayload1);
+
+        // Second TodoItem with IsComplete=true
+        var createRequestPayload2 = new TodoItemRequestModel()
+        {
+            Name = "test PUT endpoint - isComplete=true",
+            IsComplete = true
+        };
+        _createdIdTrue = Helpers.GenerateId(createRequestPayload2);
     }
     
     [Test]
@@ -27,18 +37,18 @@ public class EditTodoItemTests : BaseTestFixture
         var expectedName = "restsharp edit";
         var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
+            Id = _createdIdFalse,
             Name = "restsharp edit",
             IsComplete = true
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
         editedTodoItem.Name.Should().Be(expectedName);
         editedTodoItem.CompletedTime.Should().NotBe(null);
     }
@@ -48,40 +58,21 @@ public class EditTodoItemTests : BaseTestFixture
     {
         // arrange
         var expectedName = "restsharp edit";
-        var payload1 = new TodoItemRequestModel()
+        var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
-            Name = "restsharp edit",
-            IsComplete = true
-        };
-        
-        // act
-        // Set isComplete of createdId from false to true
-        var (_, statusCode1) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload1);
-        
-        // assert
-        statusCode1.Should().Be(HttpStatusCode.NoContent);
-        
-        var (editedTodoItem1, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
-        editedTodoItem1.Name.Should().Be(expectedName);
-        editedTodoItem1.CompletedTime.Should().NotBe(null);
-        
-        // Then set it back to false
-        // arrange
-        var payload2 = new TodoItemRequestModel()
-        {
-            Id = _createdId,
+            Id = _createdIdTrue,
             Name = "restsharp edit",
             IsComplete = false
         };
         
         // act
-        var (_, statusCode2) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload2);
+        // Set isComplete of createdId from false to true
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdTrue, payload);
         
         // assert
-        statusCode2.Should().Be(HttpStatusCode.NoContent);
+        statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdTrue);
         editedTodoItem.Name.Should().Be(expectedName);
         editedTodoItem.CompletedTime.Should().Be(null);
     }
@@ -92,19 +83,19 @@ public class EditTodoItemTests : BaseTestFixture
         // arrange
         var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
+            Id = _createdIdFalse,
             Name = "restsharp edit",
             IsComplete = true
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, "abc", payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, "abc", payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
-        editedTodoItem.Name.Should().Be("test PUT endpoint");
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
+        editedTodoItem.Name.Should().Be("test PUT endpoint - isComplete=false");
         
     }
 
@@ -120,7 +111,7 @@ public class EditTodoItemTests : BaseTestFixture
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, 999, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, 999, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);
@@ -132,18 +123,18 @@ public class EditTodoItemTests : BaseTestFixture
         // current behavior: sets name to null. should instead throw 400.
         var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
+            Id = _createdIdFalse,
             IsComplete = true
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
-        editedTodoItem.Name.Should().Be("test PUT endpoint");
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
+        editedTodoItem.Name.Should().Be("test PUT endpoint - isComplete=false");
     }
     
     [Test]
@@ -152,17 +143,17 @@ public class EditTodoItemTests : BaseTestFixture
         // defaults to false after success if isComplete is not passed in request body. should be 400.
         var payload = new TodoItemRequestModel()
         {
-            Id = _createdId,
+            Id = _createdIdFalse,
             Name = "todo missing isComplete"
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
         editedTodoItem.IsComplete.Should().Be(false);
         editedTodoItem.CompletedTime.Should().Be(null);
     }
@@ -178,12 +169,12 @@ public class EditTodoItemTests : BaseTestFixture
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
         editedTodoItem.Name.Should().Be("todo missing ID");
         editedTodoItem.IsComplete.Should().Be(true);
     }
@@ -194,13 +185,13 @@ public class EditTodoItemTests : BaseTestFixture
         var payload = new TodoItemRequestModel{};
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
-        editedTodoItem.Name.Should().Be("test PUT endpoint");
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
+        editedTodoItem.Name.Should().Be("test PUT endpoint - isComplete=false");
         editedTodoItem.IsComplete.Should().Be(false);
     }
     
@@ -209,20 +200,27 @@ public class EditTodoItemTests : BaseTestFixture
     {
         var payload = new Dictionary<string, object>
         {
-            {"id", _createdId},
+            {"id", _createdIdFalse},
             { "name", 8888 },
             { "isComplete", "some string" }
         };
         
         // act
-        var (_, statusCode) = _helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdId, payload);
+        var (_, statusCode) = Helpers.ExecutePutRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse, payload);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
         
-        var (editedTodoItem, _) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdId);
-        editedTodoItem.Name.Should().Be("test PUT endpoint");
+        var (editedTodoItem, _) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, _createdIdFalse);
+        editedTodoItem.Name.Should().Be("test PUT endpoint - isComplete=false");
         editedTodoItem.IsComplete.Should().Be(false);
+    }
+
+    [Test]
+    [Ignore("Logic on change of isComplete value from True to True is not yet implemented")]
+    public void EditTodoItem_EditIsCompleteFromTrueToTrue()
+    {
+        
     }
     
 }

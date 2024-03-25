@@ -17,15 +17,15 @@ public class DeleteTodoItemTests : BaseTestFixture
             Name = "test DELETE endpoint",
             IsComplete = false
         };
-        var createdId = _helpers.GenerateId(payload);
+        var createdId = Helpers.GenerateId(payload);
         
         // act
-        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, createdId);
+        var statusCode = Helpers.ExecuteDeleteRequest(Endpoint, createdId);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NoContent);
         
-        var (_, getTodoItemStatusCode ) = _helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
+        var (_, getTodoItemStatusCode ) = Helpers.ExecuteGetOneRequest<TodoItemResponseModel>(Endpoint, createdId);
         getTodoItemStatusCode.Should().Be(HttpStatusCode.NotFound);
         
     }
@@ -35,7 +35,8 @@ public class DeleteTodoItemTests : BaseTestFixture
     {
         // arrange
         
-        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, "abc123");
+        // act
+        var statusCode = Helpers.ExecuteDeleteRequest(Endpoint, "abc123");
         
         // assert
         statusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -44,9 +45,38 @@ public class DeleteTodoItemTests : BaseTestFixture
     [Test]
     public void DeleteTodoItem_NonExistentId()
     {
-        var statusCode = _helpers.ExecuteDeleteRequest(Endpoint, 998);
+        // arrange
+        
+        // act
+        var statusCode = Helpers.ExecuteDeleteRequest(Endpoint, 998);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Test]
+    public void DeleteTodoItem_RepeatedDeletion()
+    {
+        // arrange
+        var payload = new TodoItemRequestModel()
+        {
+            Name = "test repeat deletion, DELETE endpoint",
+            IsComplete = true
+        };
+        var createdId = Helpers.GenerateId(payload);
+        
+        // act
+        var firstDeletionStatusCode = Helpers.ExecuteDeleteRequest(Endpoint, createdId);
+        var secondDeletionStatusCode = Helpers.ExecuteDeleteRequest(Endpoint, createdId);
+
+        firstDeletionStatusCode.Should().Be(HttpStatusCode.NoContent);
+        secondDeletionStatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Test]
+    [Ignore("Todo App is still a local implementation and not hosted to a Server")]
+    public void DeleteTodoItem_ServerError()
+    {
+        
     }
 }
