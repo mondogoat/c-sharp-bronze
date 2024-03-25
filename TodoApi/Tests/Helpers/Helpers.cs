@@ -14,15 +14,10 @@ public class Helpers
         _baseUrl = baseUrl;
     }
 
-    private (T, HttpStatusCode) ExecuteRequest<T>(RestRequest request)
+    private (T?, HttpStatusCode) ExecuteRequest<T>(RestRequest request)
     {
         var client = new RestClient(_baseUrl);
         var response = client.Execute(request);
-
-        // if (response.ErrorException != null)
-        // {
-        //     throw new Exception($"Request failed with status code: {response.StatusCode}");
-        // }
 
         T responseBody;
         try
@@ -34,15 +29,11 @@ public class Helpers
             // Handle deserialization exception
             throw new Exception($"Error deserializing response: {ex.Message}");
         }
-        // if (responseBody == null)
-        // {
-        //     // Handle the case where deserialization fails
-        //     throw new Exception("Deserialization failed. Response body is null.");
-        // }
+
         return (responseBody, response.StatusCode);
     }
 
-    public (T, HttpStatusCode) ExecuteGetRequest<T>(string endpoint)
+    public (T?, HttpStatusCode) ExecuteGetRequest<T>(string endpoint)
     {
         var request = new RestRequest(endpoint, Method.Get);
         return ExecuteRequest<T>(request);
@@ -61,7 +52,7 @@ public class Helpers
         return ExecuteRequest<T>(request);
     }
 
-    public (T, HttpStatusCode) ExecutePutRequest<T>(string endpoint, object id, object payload)
+    public (T?, HttpStatusCode) ExecutePutRequest<T>(string endpoint, object id, object payload)
     {
         var request = new RestRequest($"{endpoint}/{id}", Method.Put);
         request.AddJsonBody(payload);

@@ -13,15 +13,14 @@ public class GetAllTodoTests: BaseTestFixture
     {
         for (int i = 1; i <= 5; i++)
         {
-            // alternate isComplete value, false first
-            bool isComplete = i % 2 == 0; 
+            bool isComplete = i % 2 == 0; // alternate isComplete value, false first
             var payload = new TodoItemRequestModel()
             {
                 Name = $"todo item {i}",
                 IsComplete = isComplete
             };
             
-            _helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
+            Helpers.ExecutePostRequest<TodoItemResponseModel>(Endpoint, payload);
         }
     }
     
@@ -31,7 +30,7 @@ public class GetAllTodoTests: BaseTestFixture
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
+        var (responseBody, statusCode) = Helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -45,7 +44,7 @@ public class GetAllTodoTests: BaseTestFixture
         ClearTodoList();
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
+        var (responseBody, statusCode) = Helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
         
         // assert
         statusCode.Should().Be(HttpStatusCode.OK);
@@ -58,7 +57,7 @@ public class GetAllTodoTests: BaseTestFixture
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=false");
+        var (responseBody, statusCode) = Helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=false");
         Console.WriteLine(JsonConvert.SerializeObject(responseBody));
        
         // assert
@@ -76,7 +75,7 @@ public class GetAllTodoTests: BaseTestFixture
         // arrange
         
         // act
-        var (responseBody, statusCode) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=true");
+        var (responseBody, statusCode) = Helpers.ExecuteGetRequest<List<TodoItemResponseModel>>("TodoItems?isComplete=true");
         Console.WriteLine(JsonConvert.SerializeObject(responseBody));
         
         // assert
