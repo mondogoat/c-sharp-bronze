@@ -5,7 +5,7 @@ namespace Tests.TestFixtures;
 
 public class BaseTestFixture
 {
-    protected Helpers.Helpers _helpers;
+    protected Helpers.Helpers Helpers;
     protected readonly string Endpoint = "TodoItems";
     private RestClient? _client;
     
@@ -13,11 +13,14 @@ public class BaseTestFixture
     public virtual void Setup()
     {
         _client = new RestClient("http://localhost:8080/api");
-        _helpers = new Helpers.Helpers(_client.Options.BaseUrl.ToString());
-        
-        if (_helpers == null)
+        // Helpers = new Helpers.Helpers(_client.Options.BaseUrl.ToString());
+        if (_client.Options.BaseUrl != null)
         {
-            throw new InvalidOperationException("Helpers not initialized");
+            Helpers = new Helpers.Helpers(_client.Options.BaseUrl.ToString());
+        }
+        else
+        {
+            throw new NullReferenceException("BaseUrl is null.");
         }
     }
     
@@ -30,13 +33,13 @@ public class BaseTestFixture
     [TearDown]
     public void ClearTodoList()
     {
-        var (todoItems, _) = _helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
+        var (todoItems, _) = Helpers.ExecuteGetRequest<List<TodoItemResponseModel>>(Endpoint);
     
         if (todoItems.Any())
         {
             foreach (var todoItem in todoItems)
             {
-                _helpers.ExecuteDeleteRequest(Endpoint, todoItem.Id);
+                Helpers.ExecuteDeleteRequest(Endpoint, todoItem.Id);
             }
         }
     }
